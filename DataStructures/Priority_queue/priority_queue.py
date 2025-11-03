@@ -34,3 +34,25 @@ def insert(my_heap,priority,value):
 
 def is_empty(my_heap):
     return my_heap["size"] == 0 
+
+def priority(my_heap, i,j):
+    cmp_func=my_heap["cmp_function"]
+    element_i = al.get_element(my_heap["elements"],i)
+    element_j = al.get_element(my_heap["elements"],j)
+    return cmp_func(element_i, element_j)
+def exchange(my_heap, i, j):
+    temp_i = al.get_element(my_heap["elements"],i)
+    temp_j = al.get_element(my_heap["elements"],j)
+    my_heap["elements"]=al.change_info(my_heap["elements"],i,temp_j)
+    my_heap["elements"]=al.change_info(my_heap["elements"],j,temp_i)
+    return my_heap
+
+def swim(my_heap, pos):
+    while pos> 1:
+        parent= pos//2
+        if not priority(my_heap, parent, pos):
+            my_heap= exchange(my_heap, parent, pos)
+            pos= parent
+        else:
+            break
+    return my_heap
