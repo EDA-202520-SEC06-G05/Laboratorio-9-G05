@@ -40,6 +40,7 @@ def priority(my_heap, i,j):
     element_i = al.get_element(my_heap["elements"],i)
     element_j = al.get_element(my_heap["elements"],j)
     return cmp_func(element_i, element_j)
+
 def exchange(my_heap, i, j):
     temp_i = al.get_element(my_heap["elements"],i)
     temp_j = al.get_element(my_heap["elements"],j)
@@ -56,3 +57,35 @@ def swim(my_heap, pos):
         else:
             break
     return my_heap
+
+def size(my_heap):
+    return my_heap["size"]
+
+def sink(my_heap, pos):
+    
+    size = my_heap["size"]
+    while 2 * pos <= size:
+        left = 2 * pos
+        right = left +1
+        best = left
+        
+        if right <= size and priority(my_heap, right, left):
+            best = right
+        if priority(my_heap, best, pos):
+            my_heap = exchange(my_heap, pos, best)
+        else:
+            return my_heap
+    return my_heap
+
+def remove(my_heap):
+    if my_heap["size"] == 0:
+        return None
+    else:
+        root = my_heap["elements"]["elements"][1]
+        last_pos = my_heap["size"]
+        my_heap = exchange(my_heap, 1, last_pos)
+        my_heap["size"] -= 1
+        my_heap = sink(my_heap, 1)
+        return root
+    
+        
