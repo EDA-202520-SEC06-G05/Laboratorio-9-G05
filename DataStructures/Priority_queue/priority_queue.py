@@ -87,5 +87,32 @@ def remove(my_heap):
         my_heap["size"] -= 1
         my_heap = sink(my_heap, 1)
         return root
+
+def get_first_priority (my_heap):
+    if my_heap["size"] == 0:
+        return None
+    else:
+        return my_heap["elements"][1]["value"]
+
+def is_present_value (my_heap,value):
+    heap = my_heap["elements"]
+    contador = -1
+    for i in range (1,my_heap["size"]):
+        if heap[i]["value"] == value:
+            contador = i 
+    return  contador
+
+def contains (my_heap, value):
+    if is_present_value(my_heap,value) != -1:
+        return True 
+    else:
+        return False
     
-        
+def improve_priority(my_heap, priority, value):
+    for i in range(size(my_heap)):
+        entry = my_heap["elements"][i]
+        if pqe.get_value(entry) == value:
+            pqe.set_priority(entry, priority)
+            swim(my_heap, i)
+            return my_heap   
+    return my_heap
