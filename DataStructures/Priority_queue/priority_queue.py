@@ -107,7 +107,7 @@ def contains (my_heap, value):
         return True 
     else:
         return False
-    
+
 def improve_priority(my_heap, priority, value):
     for i in range(size(my_heap)):
         entry = my_heap["elements"][i]
