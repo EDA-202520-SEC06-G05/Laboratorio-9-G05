@@ -1,4 +1,3 @@
-
 from DataStructures.Priority_queue import pq_entry as pqe
 from DataStructures.List import array_list as al
 
@@ -12,7 +11,7 @@ def default_compare_lower_value(father_node, child_node):
         return True
     return False
 
-def new_heap(is_min_pq):
+def new_heap(is_min_pq = True):
     
     new = {
         "elements": al.new_list(),
@@ -23,13 +22,16 @@ def new_heap(is_min_pq):
         new["cmp_function"] = default_compare_lower_value
     elif is_min_pq == False:
         new["cmp_function"] = default_compare_higher_value
-    new["elements"] = al.add_first(new["elements"],None)
+        
+    al.add_last(new["elements"],None)
     return new   
 
 def insert(my_heap,priority,value):
     new_pq = pqe.new_pq_entry(priority,value)
-    my_heap["elements"] = al.add_last(my_heap["elements"],new_pq)
-    " Funcion a implementar /swim(my_heap)"
+    al.add_last(my_heap["elements"],new_pq)
+    my_heap["size"] += 1
+    swim(my_heap,my_heap["size"])
+    
     return my_heap
 
 def is_empty(my_heap):
@@ -49,32 +51,34 @@ def exchange(my_heap, i, j):
     return my_heap
 
 def swim(my_heap, pos):
-    while pos> 1:
+    centinela = True
+    while pos> 1 and centinela:
         parent= pos//2
         if not priority(my_heap, parent, pos):
             my_heap= exchange(my_heap, parent, pos)
             pos= parent
         else:
-            break
+            centinela = False
     return my_heap
 
 def size(my_heap):
     return my_heap["size"]
 
 def sink(my_heap, pos):
-    
     size = my_heap["size"]
-    while 2 * pos <= size:
+    cmp_func = my_heap["cmp_function"]
+    centinela = True
+    while 2 * pos <= size and centinela:
         left = 2 * pos
-        right = left +1
+        right = left + 1
         best = left
-        
-        if right <= size and priority(my_heap, right, left):
+        if right <= size and cmp_func(al.get_element(my_heap["elements"], right), al.get_element(my_heap["elements"], left)):
             best = right
-        if priority(my_heap, best, pos):
-            my_heap = exchange(my_heap, pos, best)
+        if cmp_func(al.get_element(my_heap["elements"], best), al.get_element(my_heap["elements"], pos)):
+            exchange(my_heap, pos, best)
+            pos = best
         else:
-            return my_heap
+            centinela = False
     return my_heap
 
 def remove(my_heap):
@@ -84,9 +88,34 @@ def remove(my_heap):
         root = my_heap["elements"]["elements"][1]
         last_pos = my_heap["size"]
         my_heap = exchange(my_heap, 1, last_pos)
+        delete = al.last_element(my_heap["elements"])
+        al.remove_last(my_heap["elements"])
         my_heap["size"] -= 1
         my_heap = sink(my_heap, 1)
         return root
+        return  delete["value"]
+
+def get_first_priority (my_heap):
+    if my_heap["size"] == 0:
+        return None
+    else:
+        return my_heap["elements"]["elements"][1]["value"]
+
+def is_present_value (my_heap,value):
+    heap = my_heap["elements"]["elements"]
+    contador = -1
+    for i in range (1,my_heap["size"] + 1):
+        elemento = heap[i]
+        if elemento["value"] == value:
+            contador = i 
+            break
+    return  contador
+
+def contains (my_heap, value):
+    if is_present_value(my_heap,value) != -1:
+        return True 
+    else:
+        return False
 
 def improve_priority(my_heap, priority, value):
     for i in range(size(my_heap)):
@@ -96,5 +125,3 @@ def improve_priority(my_heap, priority, value):
             swim(my_heap, i)
             return my_heap
     return my_heap
-
-

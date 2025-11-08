@@ -27,8 +27,10 @@
 import csv
 import time
 import os
+from  DataStructures.Priority_queue import priority_queue as pq
 from DataStructures.List import array_list as al
-from DataStructures.Priority_queue import priority_queue as pqe
+
+
 # TODO Realice la importación de priority queue
 # TODO Realice la importación de ArrayList (al) o SingleLinked (sl) como estructura de datos auxiliar para sus requerimientos
 
@@ -49,9 +51,9 @@ def new_logic():
         'stops': None,
         'routes_pq': None
     }
+    analyzer['stops'] = al.new_list()
+    analyzer['routes_pq'] = pq.new_heap(False)
     
-    analyzer['stops'] = al.new_list() #TODO completar la creación de la lista
-    analyzer['routes_pq'] = pqe.new_heap() #TODO completar la creación de la cola de prioridad
     return analyzer
 
 # ___________________________________________________
@@ -111,7 +113,13 @@ def add_stop(analyzer, stop):
     #         'priority': stop['WD_FirstBus']
     #     }
     #     pq.insert(analyzer['pq'], element['priority'], element)
-
+    value_node = {
+        'route_id': stop['ServiceNo'],
+        'direction': stop['Direction'],
+        'priority': stop['WD_FirstBus']
+    }
+    if stop["StopSequence"] == "1":
+        pq.insert(analyzer["routes_pq"], stop["WD_FirstBus"], value_node)
     return analyzer
 
 
@@ -163,6 +171,7 @@ def get_next_route(analyzer):
     # next_route = pq.min(analyzer['pq'])
     # pq.delMin(analyzer['pq'])
     # return next_route
-
-    pass
+    priority_max = pq.get_first_priority(analyzer["routes_pq"])
+    pq.remove(analyzer["routes_pq"])
+    return priority_max
 
