@@ -87,5 +87,14 @@ def remove(my_heap):
         my_heap["size"] -= 1
         my_heap = sink(my_heap, 1)
         return root
-    
-        
+
+def improve_priority(my_heap, priority, value):
+    for i in range(size(my_heap)):
+        entry = my_heap["elements"][i]
+        if pqe.get_value(entry) == value:
+            pqe.set_priority(entry, priority)
+            swim(my_heap, i)
+            return my_heap
+    return my_heap
+
+
